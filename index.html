@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Safety & Smart Diet Scanner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🍎 FoodGuard</h1>
+            <p>Smart Diet & Safety Scanner</p>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <button class="nav-btn active" data-page="profile">👤 Profile</button>
+            <button class="nav-btn" data-page="scan">📦 Scan</button>
+            <button class="nav-btn" data-page="results">📊 Results</button>
+            <button class="nav-btn" data-page="reviews">⭐ Reviews</button>
+        </nav>
+
+        <!-- Profile Page -->
+        <div id="profile" class="page active">
+            <div class="card slide-up">
+                <div class="card-header">
+                    <h2 class="card-title">My Health Profile</h2>
+                </div>
+                <p style="color: var(--text-light); margin-bottom: 20px; font-size: 0.9rem;">
+                    Set your health goals for personalized recommendations
+                </p>
+                
+                <form id="profileForm">
+                    <div class="form-group">
+                        <label for="userName">Your Name</label>
+                        <input type="text" id="userName" placeholder="Enter your name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userAge">Age</label>
+                        <input type="number" id="userAge" placeholder="Enter your age" min="1" max="120" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userWeight">Weight (kg)</label>
+                        <input type="number" id="userWeight" placeholder="Enter your weight" min="20" max="300" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="healthGoal">Health Goal</label>
+                        <select id="healthGoal" required>
+                            <option value="">Select your goal</option>
+                            <option value="weight-loss">Weight Loss</option>
+                            <option value="weight-gain">Weight Gain</option>
+                            <option value="diabetic">Diabetic Friendly</option>
+                            <option value="heart-healthy">Heart Healthy</option>
+                            <option value="normal">Normal Diet</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <span>💾 Save Profile</span>
+                    </button>
+                </form>
+                
+                <div id="profileSaved" class="hidden" style="margin-top: 20px; padding: 16px; background: rgba(46, 204, 113, 0.1); border-radius: 12px; text-align: center;">
+                    <span style="font-size: 2rem;">✅</span>
+                    <p style="color: #27ae60; font-weight: 600; margin-top: 8px;">Profile Saved Successfully!</p>
+                </div>
+            </div>
+            
+            <div class="card slide-up" id="profileDisplay">
+                <div class="card-header">
+                    <h2 class="card-title">Current Profile</h2>
+                </div>
+                <div id="profileInfo" style="color: var(--text-light); font-size: 0.95rem;">
+                    <p>No profile saved yet. Please fill in the form above.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scan Page -->
+        <div id="scan" class="page">
+            <div class="card slide-up">
+                <div class="card-header">
+                    <h2 class="card-title">Scan Product</h2>
+                </div>
+                
+                <div class="scanner-container">
+                    <div class="scanner-area" id="scannerArea">
+                        <div class="scanner-icon">📷</div>
+                        <p class="scanner-text">Position barcode within frame</p>
+                    </div>
+                    
+                    <button id="scanBtn" class="btn btn-primary mb-20">
+                        <span>🔍 Start Camera Scan</span>
+                    </button>
+                    
+                    <div style="text-align: center; margin: 20px 0; color: var(--text-light); font-size: 0.9rem;">
+                        — OR —
+                    </div>
+                    
+                    <div class="manual-input">
+                        <input type="text" id="manualBarcode" placeholder="Enter barcode manually">
+                        <button id="manualSubmit" class="btn btn-secondary">Go</button>
+                    </div>
+                </div>
+                
+                <div id="scanLoading" class="hidden text-center">
+                    <div class="spinner" style="margin: 0 auto 20px;"></div>
+                    <p style="color: var(--text-light);">Scanning product...</p>
+                </div>
+            </div>
+            
+            <div class="card slide-up">
+                <div class="card-header">
+                    <h2 class="card-title">Quick Test Barcodes</h2>
+                </div>
+                <p style="color: var(--text-light); margin-bottom: 16px; font-size: 0.9rem;">
+                    Try these test barcodes to see the app in action:
+                </p>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <button class="btn btn-outline" onclick="testBarcode('123456789012')">Healthy Cereal</button>
+                    <button class="btn btn-outline" onclick="testBarcode('234567890123')">Sugary Soda</button>
+                    <button class="btn btn-outline" onclick="testBarcode('345678901234')">Chips</button>
+                    <button class="btn btn-outline" onclick="testBarcode('456789012345')">Fresh Juice</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Page -->
+        <div id="results" class="page">
+            <div id="noResults" class="text-center" style="padding: 40px 20px;">
+                <div style="font-size: 4rem; margin-bottom: 20px;">📦</div>
+                <h3 style="color: var(--text-light); margin-bottom: 12px;">No Product Scanned</h3>
+                <p style="color: var(--text-light); font-size: 0.9rem;">
+                    Scan a product barcode to see detailed safety and nutrition analysis
+                </p>
+            </div>
+            
+            <div id="resultsContent" class="hidden">
+                <!-- Safety Status -->
+                <div class="card slide-up">
+                    <div class="card-header">
+                        <h2 class="card-title">Food Safety Check</h2>
+                    </div>
+                    <div id="safetyBadge" class="safety-badge"></div>
+                    <p id="safetyMessage" style="color: var(--text-dark); line-height: 1.5;"></p>
+                </div>
+                
+                <!-- Product Information -->
+                <div class="card slide-up">
+                    <div class="card-header">
+                        <h2 class="card-title">Product Information</h2>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name" id="productName">-</h3>
+                        <p class="product-brand" id="productBrand">-</p>
+                        <div style="margin-top: 12px; font-size: 0.9rem; color: var(--text-light);">
+                            <p><strong>Expiry Date:</strong> <span id="expiryDate">-</span></p>
+                            <p><strong>Ingredients:</strong> <span id="ingredients">-</span></p>
+                        </div>
+                        <div class="nutrition-grid">
+                            <div class="nutrition-item">
+                                <div class="nutrition-value" id="calories">-</div>
+                                <div class="nutrition-label">Calories</div>
+                            </div>
+                            <div class="nutrition-item">
+                                <div class="nutrition-value" id="sugar">-</div>
+                                <div class="nutrition-label">Sugar (g)</div>
+                            </div>
+                            <div class="nutrition-item">
+                                <div class="nutrition-value" id="fat">-</div>
+                                <div class="nutrition-label">Fat (g)</div>
+                            </div>
+                            <div class="nutrition-item">
+                                <div class="nutrition-value" id="salt">-</div>
+                                <div class="nutrition-label">Salt (g)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Health Score -->
+                <div class="card slide-up">
+                    <div class="card-header">
+                        <h2 class="card-title">Smart Health Score</h2>
+                    </div>
+                    <div class="health-meter">
+                        <p class="meter-label">Overall Health Rating</p>
+                        <div class="meter-container">
+                            <div class="meter-fill" id="healthMeterFill" style="width: 0%"></div>
+                        </div>
+                        <div class="meter-score" id="healthScore">0</div>
+                        <p class="meter-description" id="healthDescription">-</p>
+                    </div>
+                </div>
+                
+                <!-- Diet Compatibility -->
+                <div class="card slide-up">
+                    <div class="card-header">
+                        <h2 class="card-title">Diet Compatibility</h2>
+                    </div>
+                    <div id="compatibilityResult" class="compatibility-result">
+                        <div class="compatibility-icon" id="compatibilityIcon">-</div>
+                        <div class="compatibility-content">
+                            <div class="compatibility-title" id="compatibilityTitle">-</div>
+                            <div class="compatibility-message" id="compatibilityMessage">-</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Smart Recommendations -->
+                <div class="card slide-up" id="recommendationsCard">
+                    <div class="card-header">
+                        <h2 class="card-title">💡 Smart Recommendations</h2>
+                    </div>
+                    <div id="recommendations"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reviews Page -->
+        <div id="reviews" class="page">
+            <div class="card slide-up">
+                <div class="card-header">
+                    <h2 class="card-title">Product Reviews</h2>
+                </div>
+                
+                <div id="noProductReview" class="text-center" style="padding: 40px 20px;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">⭐</div>
+                    <h3 style="color: var(--text-light); margin-bottom: 12px;">No Product Selected</h3>
+                    <p style="color: var(--text-light); font-size: 0.9rem;">
+                        Scan a product first to rate and review it
+                    </p>
+                </div>
+                
+                <div id="reviewSection" class="hidden">
+                    <div class="review-form">
+                        <p style="margin-bottom: 12px; font-weight: 500; color: var(--dark-gray);">
+                            Rate <strong id="reviewProductName">this product</strong>
+                        </p>
+                        <div class="rating-stars" id="ratingStars">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                        <textarea class="review-textarea" id="reviewText" placeholder="Share your experience with this product..."></textarea>
+                        
+                        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                            <button class="btn btn-outline" id="markSafe" style="flex: 1;">🟢 Mark Safe</button>
+                            <button class="btn btn-outline" id="markUnsafe" style="flex: 1;">🔴 Mark Unsafe</button>
+                        </div>
+                        
+                        <button class="btn btn-primary" id="submitReview">
+                            <span>📝 Submit Review</span>
+                        </button>
+                    </div>
+                    
+                    <div class="card-header" style="margin-top: 24px;">
+                        <h3 class="card-title">Recent Reviews</h3>
+                    </div>
+                    <div class="review-list" id="reviewList">
+                        <!-- Reviews will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
